@@ -1,40 +1,30 @@
-// Render backend'e WebSocket bağlantısı
 const socket = new WebSocket("wss://pcremoteclient.onrender.com/ws");
 
-// Bağlantı açıldığında
+// Bağlantı kuruldu
 socket.onopen = () => {
-    console.log("Sunucuya bağlanıldı!");
+    console.log("🔗 WebSocket bağlandı!");
 };
 
-// Bağlantı hatası olduğunda
+// Hata
 socket.onerror = (err) => {
-    console.log("WebSocket hatası:", err);
+    console.log("⚠ WebSocket hatası:", err);
 };
 
-// Sunucudan mesaj alındığında
+// Sunucudan veri
 socket.onmessage = (event) => {
-    console.log("Sunucudan gelen:", event.data);
+    console.log("📥 Sunucudan gelen:", event.data);
 };
 
-// Komut gönderme fonksiyonu
+// Komut gönderici
 function sendCommand(cmd) {
     if (socket.readyState === WebSocket.OPEN) {
         socket.send(cmd);
-        console.log("Gönderildi:", cmd);
+        console.log("📤 Gönderildi:", cmd);
     } else {
-        console.log("WebSocket bağlı değil.");
+        console.log("❌ WebSocket bağlı değil!");
     }
 }
 
-// HTML butonları
-document.getElementById("shutdown").addEventListener("click", () => {
-    sendCommand("shutdown");
-});
-
-document.getElementById("restart").addEventListener("click", () => {
-    sendCommand("restart");
-});
-
-document.getElementById("lock").addEventListener("click", () => {
-    sendCommand("lock");
-});
+document.getElementById("shutdown").onclick = () => sendCommand("shutdown");
+document.getElementById("restart").onclick = () => sendCommand("restart");
+document.getElementById("lock").onclick = () => sendCommand("lock");

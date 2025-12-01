@@ -1,20 +1,17 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <meta charset="UTF-8">
+    <title>PC Remote Controller</title>
+    <link rel="stylesheet" href="style.css">
+</head>
 <body>
-    <h2>PC Remote Controller</h2>
+    <h1>PC Remote Controller</h1>
 
-    <button onclick="send('shutdown')">Kapat</button>
-    <button onclick="send('restart')">Yeniden Başlat</button>
-    <button onclick="send('lock')">Kilitle</button>
+    <button id="shutdown">Shutdown</button>
+    <button id="restart">Restart</button>
+    <button id="lock">Lock</button>
 
-    <script>
-function send(cmd){
-    fetch("https://pcremoteclient.onrender.com/send-command", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({command: cmd})
-    });
-}
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
