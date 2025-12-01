@@ -9,7 +9,7 @@
 
     <script>
 function send(cmd){
-    fetch("https://pc-remote-controller.onrender.com/send-command", {
+    fetch("https://pcremoteclient.onrender.com/send-command", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({command: cmd})
