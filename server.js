@@ -1,33 +1,34 @@
 const express = require("express");
-const cors = require("cors");
-
-let lastCommand = "";
+const http = require("http");
+const WebSocket = require("ws");
 
 const app = express();
-app.use(cors());
-app.use(express.json());
+const server = http.createServer(app);
 
-app.get("/", (req, res) => {
-    res.send("PC Remote Controller is running.");
+// PUBLIC klasörünü serve et
+app.use(express.static("public"));
+
+// WebSocket server aynı portu kullanıyor
+const wss = new WebSocket.Server({ server, path: "/ws" });
+
+wss.on("connection", (ws) => {
+    console.log("📡 WebSocket bağlı!");
+
+    ws.on("message", (msg) => {
+        console.log("Komut alındı:", msg.toString());
+
+        // İstersen geri mesaj da gönderebilirsin
+        ws.send("Komut işlendi: " + msg);
+    });
+
+    ws.on("close", () => {
+        console.log("🔌 WebSocket bağlantısı kapandı.");
+    });
 });
 
-// TELEFON → backend
-app.post("/send-command", (req, res) => {
-    const { command } = req.body;
+// Render PORT'u yoksa local 10000 kullan
+const PORT = process.env.PORT || 10000;
 
-    if (!command) return res.status(400).send("Komut eksik.");
-
-    lastCommand = command;
-    console.log("Komut alındı:", command);
-
-    res.send("Komut gönderildi.");
+server.listen(PORT, () => {
+    console.log("🚀 Server çalışıyor:", PORT);
 });
-
-// PC CLIENT → backend
-app.get("/get-command", (req, res) => {
-    res.send(lastCommand);
-    lastCommand = "";  // komutu okuduktan sonra sıfırla
-});
-
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Server çalışıyor: ${port}`));
